@@ -1,40 +1,38 @@
 # Digital Trust MCP + Skill (GCloudFactory)
 
-Repositorio listo para publicar en GitHub que empaqueta:
-- **Skill** `digital-trust-gcloudfactory` para Codex/Antigravity (instrucciones, referencias y OpenAPI).
-- **MCP server** `mcp/digital-trust` para invocar la API Digital Trust / Legal App Factory.
+Integración lista para usar con la API Digital Trust / Legal App Factory: incluye un Skill para agentes y un servidor MCP en Node/TypeScript con validación automática a partir del OpenAPI oficial.
 
-## Estructura
-```
-./digital-trust-gcloudfactory/       # Skill con SKILL.md, referencias y OpenAPI
-./digital-trust/                     # MCP server Node/TypeScript
-```
+## Qué es esto
+- **Skill `digital-trust-gcloudfactory`**: guía de uso, referencias de auth/endpoints y OpenAPI para que agentes trabajen con case files, evidencias, reportes y firma de archivos.
+- **MCP server `digital-trust`**: expone herramientas sobre stdio para consumir la API (login, case-files, evidences, reports, sign-file, webhooks).
 
-## Documentación oficial de la API
-- Portal: https://digitaltrust.gcloudfactory.com/index.html
+## Enlaces de producto y documentación
+- Landing comercial: https://legal-leap-page.lovable.app/
+- Portal técnico: https://digitaltrust.gcloudfactory.com/index.html
 - Getting started (auth): https://digitaltrust.gcloudfactory.com/getting-started.html
 - HTTP standards (headers, base-paths): https://digitaltrust.gcloudfactory.com/api-http-standars.html
 - Swagger UI: https://api.gcloudfactory.com/digital-trust/swagger-ui/
-- OpenAPI usado en este repo: `digital-trust-gcloudfactory/assets/digital-trust-api-1.0.yml`
+- OpenAPI incluido en este repo: `digital-trust-gcloudfactory/assets/digital-trust-api-1.0.yml`
 
-## Skill (digital-trust-gcloudfactory)
-- Frontmatter descriptivo + guía de uso rápido.
-- Referencias: autenticación, endpoints clave, códigos de error.
-- Script utilitario: `scripts/get_token.py` (client_credentials).
+## Estructura del repo
+```
+./digital-trust-gcloudfactory/   # Skill (SKILL.md, referencias, OpenAPI, script de token)
+./digital-trust/                 # MCP server (Node/TS, Zod generado desde OpenAPI)
+```
 
-## MCP Server (digital-trust)
-- Node 22+, TypeScript.
-- Herramientas expuestas (todas con validación Zod generada desde OpenAPI):
-  - `login`
-  - `caseFiles.list | create | get`
-  - `evidences.create | uploadUrl | downloadUrl | uploadUrlById | downloadUrlById`
-  - `signFile.create | signFile.downloadUrl`
-  - `reports.createForCase | reports.document | reports.package | reports.delete | reports.case.document | reports.case.package`
-  - `webhooks.verifyHmac` (prefijo de firma opcional, sha256/sha1)
-- Descargas de PDF/ZIP se devuelven en JSON `{ contentType, base64 }` para que el cliente MCP decodifique.
+## MCP: instalación y uso rápido
+Requisitos: Node 22+, npm.
+```
+cd digital-trust
+npm install
+npm run generate:openapi   # opcional; regenera los esquemas Zod desde el OpenAPI
+npm run build
+npm start                  # expone el MCP por stdio
+# o modo dev
+npm run dev
+```
 
-### Configuración
-Variables en `.env` (ver `.env.example`):
+Config (.env, ver `.env.example`):
 ```
 BASE_URL=https://api.int.gcloudfactory.com/digital-trust/api   # o PRE
 LOGIN_URL=https://auth.int.gcloudfactory.com/oauth/token       # provisto por Digital Trust
@@ -44,18 +42,18 @@ SCOPE=token
 TIMEOUT_MS=10000
 ```
 
-### Instalación y build
-```
-cd digital-trust
-npm install
-npm run generate:openapi   # (si se quiere regenerar Zod desde el spec)
-npm run build
-npm start                  # expone MCP por stdio
-# o modo dev
-npm run dev
-```
+### Herramientas MCP disponibles
+- `login`
+- `caseFiles.list | create | get`
+- `evidences.create | uploadUrl | downloadUrl | uploadUrlById | downloadUrlById`
+- `signFile.create | signFile.downloadUrl`
+- `reports.createForCase | reports.document | reports.package | reports.delete | reports.case.document | reports.case.package`
+- `webhooks.verifyHmac` (prefijo opcional, sha256/sha1)
 
-### Ejemplo de llamada (payload MCP)
+Las descargas PDF/ZIP se devuelven como JSON `{ contentType, base64 }` para que el cliente MCP las decodifique.
+
+### Ejemplo de integración (payload MCP)
+Subir evidencia (solicitar URL de subida):
 ```json
 {
   "name": "evidences.uploadUrl",
@@ -69,19 +67,30 @@ npm run dev
   }
 }
 ```
-
-## Publicación en GitHub
-1. Posiciónate en este directorio: `cd /Users/moisesmenendez/Dropbox/Codigo/agent/digital-trust-mcp`
-2. Inicializa git y agrega remoto de tu repo:
+Crear reporte y descargar PDF:
+```json
+{
+  "name": "reports.createForCase",
+  "arguments": {
+    "token": "<ACCESS_TOKEN>",
+    "caseFileId": "<uuid>",
+    "body": { "reportType": "SUMMARY", "title": "QA Report" }
+  }
+}
 ```
-git init
-git add .
-git commit -m "feat: add digital-trust skill and mcp server"
-git remote add origin git@github.com:<tu_usuario>/<repo>.git
-git push -u origin main
+```json
+{
+  "name": "reports.document",
+  "arguments": { "token": "<ACCESS_TOKEN>", "reportId": "<reportId>" }
+}
 ```
 
-## Pendientes opcionales
-- Añadir endpoints de Chat Manager y Notification Manager cuando tengamos sus OpenAPI.
-- Ajustar verificación de webhooks a las cabeceras/algoritmo oficiales cuando el proveedor lo comparta.
-- Soporte de streaming binario si el cliente MCP lo requiere.
+## Skill (para agentes)
+- `SKILL.md` describe flujo de auth, base-paths INT/PRE y tareas por dominio.
+- Referencias listas para cargar bajo demanda: `references/auth.md`, `endpoints.md`, `errors.md`.
+- Script: `scripts/get_token.py` (login con client_credentials).
+
+## Roadmap
+- Añadir endpoints de Chat Manager y Notification Manager cuando se disponga de sus OpenAPI.
+- Ajustar verificación de webhooks al esquema oficial de cabeceras/firma cuando el proveedor lo comparta.
+- Opcional: soporte de streaming binario si el cliente MCP lo requiere.
