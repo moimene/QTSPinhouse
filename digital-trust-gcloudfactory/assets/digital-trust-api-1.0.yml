@@ -1,0 +1,3003 @@
+openapi: 3.0.1
+info:
+  title: Digital trust API
+  description: API used for Digital trust
+  version: "1.0"
+paths:
+  /api/v1/private/case-files:
+    get:
+      tags:
+      - CaseFile
+      summary: Search case file with filters
+      operationId: search
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/SearchCaseFileRequestModel"
+      responses:
+        "200":
+          description: Case files retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchCaseFileCollectionViewModel"
+        "400":
+          description: Bad request
+    post:
+      tags:
+      - CaseFile
+      summary: Create a new case file in the system
+      operationId: createCaseFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCaseFileRequestModel"
+        required: true
+      responses:
+        "201":
+          description: CaseFile created
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Unexpected error
+    patch:
+      tags:
+      - CaseFile
+      summary: Update a case files
+      operationId: updateCaseFiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCaseFilesRequestModel"
+        required: true
+      responses:
+        "204":
+          description: Case files updated sucessfully
+        "400":
+          description: Bad request
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}:
+    get:
+      tags:
+      - CaseFile
+      summary: Get case file by its identifier
+      operationId: getCaseFile
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: Case file retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCaseFileViewModel"
+        "400":
+          description: Bad request
+    patch:
+      tags:
+      - CaseFile
+      summary: Update a case file
+      operationId: updateCaseFile
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCaseFileRequestModel"
+        required: true
+      responses:
+        "204":
+          description: Updated successfully
+        "400":
+          description: Bad request
+        "404":
+          description: Case file not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups:
+    post:
+      tags:
+      - EvidenceGroup
+      summary: Create evidence group
+      operationId: createEvidenceGroup
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEvidenceGroupRequestModel"
+        required: true
+      responses:
+        "201":
+          description: EvidenceGroup created
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}:
+    get:
+      tags:
+      - EvidenceGroup
+      summary: Get evidence group details
+      operationId: getEvidenceGroup
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: Evidence group retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvidenceGroupViewModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Evidence group not found
+    delete:
+      tags:
+      - EvidenceGroup
+      summary: Discard an evidence group
+      operationId: discardGroup
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "204":
+          description: Evidence group discarded successfully
+        "404":
+          description: Evidence group to discard does not exist
+        "500":
+          description: Unexpected error
+    patch:
+      tags:
+      - EvidenceGroup
+      summary: Update evidence group
+      operationId: updateEvidenceGroup
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEvidenceGroupRequest"
+        required: true
+      responses:
+        "200":
+          description: Evidence Group updated correctly
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+        "404":
+          description: Evidence group not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}/close:
+    post:
+      tags:
+      - EvidenceGroup
+      summary: Close evidence group
+      operationId: closeEvidenceGroup
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CloseEvidenceGroupRequestModel"
+        required: true
+      responses:
+        "202":
+          description: EvidenceGroup close request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}/evidences:
+    post:
+      tags:
+      - Evidence
+      summary: Register a new evidence in a group
+      operationId: registerEvidence
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterEvidenceRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Evidence registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterEvidenceResponseModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}/evidences/{evidenceId}:
+    get:
+      tags:
+      - Evidence
+      summary: Get evidence in group details
+      operationId: getEvidence
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: Evidence got
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetEvidenceViewModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+    delete:
+      tags:
+      - Evidence
+      summary: Delete evidence
+      operationId: deleteEvidence
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "204":
+          description: Evidence deleted
+        "404":
+          description: Not Found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}/evidences/{evidenceId}/download-url:
+    get:
+      tags:
+      - Evidence
+      summary: Create download url
+      operationId: createDownloadUrl
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "201":
+          description: Download url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{evidenceGroupId}/evidences/{evidenceId}/upload-url:
+    post:
+      tags:
+      - Evidence
+      summary: Create upload url
+      operationId: createUploadUrl
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceGroupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestModel:
+                  $ref: "#/components/schemas/NewUploadUrlRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Upload url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/evidence-groups/{groupId}/evidences/{evidenceId}/thumbnail-url/{thumbnailSize}:
+    get:
+      tags:
+      - Evidence
+      summary: Get the evidence image thumbnail URL
+      operationId: thumbnailUrl
+      parameters:
+      - name: caseFileId
+        in: path
+        description: Identifier of the case file
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: groupId
+        in: path
+        description: Identifier of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: thumbnailSize
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Thumbnail URL location and expiration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlModel_1"
+        "404":
+          description: Thumbnail URL not found
+  /api/v1/private/case-files/{caseFileId}/relationship:
+    post:
+      tags:
+      - CaseFile
+      summary: Create a new relationship assigned to a case file in the system
+      operationId: assignRelationship
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignRelationshipRequestModel"
+        required: true
+      responses:
+        "200":
+          description: Item assigned to case file
+        "400":
+          description: Case file not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/case-files/{caseFileId}/report-preview:
+    post:
+      tags:
+      - CaseFile
+      summary: Generate Case File ReportPreview
+      operationId: obtainReportPreview
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseFilePreviewReportRequestModel"
+        required: true
+      responses:
+        "200":
+          description: Generated ReportPreview
+          content:
+            text/html:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+  /api/v1/private/case-files/{caseFileId}/reports:
+    post:
+      tags:
+      - CaseFile
+      summary: Generate Case File signed report
+      operationId: obtainSignedReport
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseFileReportRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Generated signed report
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+  /api/v1/private/case-files/{caseFileId}/reports/{reportId}/document:
+    get:
+      tags:
+      - CaseFile
+      summary: Get report PDF URL
+      operationId: reportPdf
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reportId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Report PDF URL information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+      deprecated: true
+  /api/v1/private/case-files/{caseFileId}/reports/{reportId}/package:
+    get:
+      tags:
+      - CaseFile
+      summary: Get report ZIP URL
+      operationId: reportZip
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reportId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Report ZIP URL information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+      deprecated: true
+  /api/v1/private/case-files/{caseFileId}/status:
+    put:
+      tags:
+      - CaseFile
+      summary: Update case file status
+      operationId: updateCaseFileStatus
+      parameters:
+      - name: caseFileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCaseFileStatusRequestModel"
+        required: true
+      responses:
+        "204":
+          description: Updated successfully
+        "400":
+          description: Bad request
+        "404":
+          description: Case file not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/chat/{chatId}/report-preview:
+    post:
+      tags:
+      - CaseFile
+      summary: Generate Chat ReportPreview
+      operationId: obtainReportPreview_1
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatPreviewReportRequestModel"
+        required: true
+      responses:
+        "200":
+          description: Generated ReportPreview
+          content:
+            text/html:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+  /api/v1/private/chat/{chatId}/reports:
+    post:
+      tags:
+      - Chat
+      summary: Generate signed chat report
+      operationId: obtainSignedChatReport
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatSignedReportRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Generated signed chat report
+        "400":
+          description: Bad request
+        "404":
+          description: Resource not found
+  /api/v1/private/evidence-groups:
+    get:
+      tags:
+      - EvidenceGroup
+      summary: Search evidence group
+      operationId: search_1
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/EvidenceGroupSearch"
+      responses:
+        "200":
+          description: Evidence Groups returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchEvidenceGroupCollectionViewModel"
+        "400":
+          description: Bad request
+    patch:
+      tags:
+      - EvidenceGroup
+      summary: Update evidence groups
+      operationId: updateEvidenceGroups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEvidenceGroupsRequest"
+        required: true
+      responses:
+        "204":
+          description: Evidence groups updated successfully
+        "400":
+          description: Bad request
+        "500":
+          description: Unexpected error
+  /api/v1/private/evidences:
+    get:
+      tags:
+      - Evidence
+      summary: Search evidences
+      operationId: search_2
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/SearchEvidenceRequestModel"
+      responses:
+        "200":
+          description: Evidences returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchEvidenceCollectionViewModel"
+        "400":
+          description: Bad request
+    post:
+      tags:
+      - Evidence
+      summary: Register a new evidence
+      operationId: registerEvidence_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterEvidenceRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Evidence registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterEvidenceResponseModel"
+        "400":
+          description: Bad request
+        "500":
+          description: Unexpected error
+    patch:
+      tags:
+      - Evidence
+      summary: Update evidences
+      operationId: updateEvidence
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEvidencesRequestModel"
+        required: true
+      responses:
+        "204":
+          description: Evidences updated sucessfully
+        "400":
+          description: Bad request
+        "500":
+          description: Unexpected error
+  /api/v1/private/evidences/{evidenceId}:
+    get:
+      tags:
+      - Evidence
+      summary: Get evidence details
+      operationId: getEvidence_1
+      parameters:
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "200":
+          description: Evidence got
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetEvidenceViewModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+    delete:
+      tags:
+      - Evidence
+      summary: Delete evidence
+      operationId: deleteEvidence_1
+      parameters:
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "204":
+          description: Evidence deleted
+        "404":
+          description: Not Found
+        "500":
+          description: Unexpected error
+    patch:
+      tags:
+      - Evidence
+      summary: Update evidence
+      operationId: updateEvidence_1
+      parameters:
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEvidenceRequestModel"
+        required: true
+      responses:
+        "204":
+          description: Evidence updated
+        "404":
+          description: Not Found
+        "500":
+          description: Unexpected error
+  /api/v1/private/evidences/{evidenceId}/download-url:
+    get:
+      tags:
+      - Evidence
+      summary: Create download url
+      operationId: createDownloadUrl_1
+      parameters:
+      - name: evidenceId
+        in: path
+        description: Identifier of the evidence
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "201":
+          description: Download url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/evidences/{evidenceId}/upload-url:
+    post:
+      tags:
+      - Evidence
+      summary: Create upload url
+      operationId: createUploadUrl_1
+      parameters:
+      - name: evidenceId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUploadUrlRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Upload url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/files:
+    post:
+      tags:
+      - Evidence
+      summary: Create upload url temporary file
+      operationId: createUploadUrl_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlTemporaryFileHttpRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Upload url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/reports/{reportId}:
+    delete:
+      tags:
+      - CaseFile
+      summary: Delete report
+      operationId: deleteReport
+      parameters:
+      - name: reportId
+        in: path
+        description: Identifier of the report
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      responses:
+        "204":
+          description: Report deleted
+        "400":
+          description: Bad request
+        "404":
+          description: Report not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/reports/{reportId}/document:
+    get:
+      tags:
+      - Reports
+      summary: Get the report PDF document
+      operationId: getReportPdf
+      parameters:
+      - name: reportId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: The URL and expiration to download the required report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Report not found
+        "406":
+          description: "Request not acceptable, because the report type requested\
+            \ is not valid"
+  /api/v1/private/reports/{reportId}/package:
+    get:
+      tags:
+      - Reports
+      summary: Get the report ZIP package document
+      operationId: getReportZip
+      parameters:
+      - name: reportId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: The URL and expiration to download the required report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlModel"
+        "400":
+          description: Bad request
+        "404":
+          description: Report not found
+        "406":
+          description: "Request not acceptable, because the report type requested\
+            \ is not valid"
+  /api/v1/private/sign-file:
+    post:
+      tags:
+      - Sign File
+      summary: Sign File
+      operationId: signFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignFileRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Generated signed File
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request
+        "500":
+          description: Unexpected error
+  /api/v1/private/sign-file/{fileId}/download-url:
+    get:
+      tags:
+      - Sign File
+      summary: Create sign file download url
+      operationId: createDownloadUrl_2
+      parameters:
+      - name: fileId
+        in: path
+        description: Identifier of the sign file process
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "201":
+          description: Download sign file url created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrlResponseModel"
+        "404":
+          description: Resource sign file not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/uploads/{evidenceId}/{fileName}:
+    post:
+      tags:
+      - Evidence
+      summary: Create upload url temporary file
+      operationId: startMultipartUpload
+      parameters:
+      - name: evidenceId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fileName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartMultipartUploadRequestModel"
+        required: true
+      responses:
+        "201":
+          description: Upload url created
+        "404":
+          description: Resource not found
+        "500":
+          description: Unexpected error
+  /api/v1/private/uploads/{evidenceId}/{filename}/{uploadId}:
+    get:
+      tags:
+      - Temporary files
+      summary: Complete a temporary file multipart upload
+      operationId: getLink
+      parameters:
+      - name: evidenceId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: filename
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: uploadId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: partNumber
+        in: query
+        required: true
+        schema:
+          maximum: 10000
+          minimum: 1
+          type: integer
+          format: int32
+      responses:
+        "202":
+          description: Multipart upload successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadLinkOutputModel"
+        "400":
+          description: If the request parameters or query string is wrong
+        "404":
+          description: If evidence file upload is not found
+        "500":
+          description: Unexpected error
+    post:
+      tags:
+      - Temporary files
+      summary: Complete a temporary file multipart upload
+      operationId: completeMultipartUpload
+      parameters:
+      - name: evidenceId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: filename
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: uploadId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: partsCount
+        in: query
+        required: true
+        schema:
+          maximum: 10000
+          minimum: 1
+          type: integer
+          format: int32
+      responses:
+        "202":
+          description: Multipart upload successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: If the request parameters or query string is wrong
+        "500":
+          description: Unexpected error
+    delete:
+      tags:
+      - Temporary files
+      summary: Complete a temporary file multipart upload
+      operationId: cancelMultipartUpload
+      parameters:
+      - name: evidenceId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: filename
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: uploadId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Multipart upload successfully
+        "400":
+          description: If the request parameters or query string is wrong
+        "500":
+          description: Unexpected error
+  /api/v1/webhook/doc-manager/file-uploaded:
+    post:
+      tags:
+      - FileUploaded
+      summary: File uploaded to DocManager
+      operationId: fileUploaded
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUploadedRequestModel"
+        required: true
+      responses:
+        "202":
+          description: File uploaded received
+        "500":
+          description: Unexpected error
+  /api/v1/webhook/testifier/hash-timestamped:
+    post:
+      tags:
+      - HashTimestamping
+      operationId: timestamping
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HashTimestampedRequestModel"
+        required: true
+      responses:
+        "202":
+          description: timestamping 202 response
+  /api/v1/webhook/testifier/hash-timestamping-failed:
+    post:
+      tags:
+      - HashTimestampingFailed
+      summary: The hash timestamping process in external provider has failed
+      operationId: timestampingFailed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HashTimestampingFailedRequestModel"
+        required: true
+      responses:
+        "202":
+          description: Hash timestamped confirmation recieved
+        "500":
+          description: Unexpected error
+components:
+  schemas:
+    AssignRelationshipRequestModel:
+      required:
+      - itemType
+      - itemValue
+      type: object
+      properties:
+        itemType:
+          description: Field that indicates what type of relationship is assigned
+          example: CHAT_CONVERSATION
+          allOf:
+          - $ref: "#/components/schemas/RelationshipItemType"
+        itemValue:
+          type: string
+          description: Value that represents the resource of the relationship. It
+            could be an external identifier
+          example: CHAT_CONVERSATION
+    BaseCollectionViewModel_SearchCaseFileViewModel_:
+      type: object
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchCaseFileViewModel"
+        _metadata:
+          $ref: "#/components/schemas/Metadata"
+    BaseCollectionViewModel_SearchEvidenceGroupViewModel_:
+      type: object
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchEvidenceGroupViewModel"
+        _metadata:
+          $ref: "#/components/schemas/Metadata"
+    BaseCollectionViewModel_SearchEvidenceViewModel_:
+      type: object
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchEvidenceViewModel"
+        _metadata:
+          $ref: "#/components/schemas/Metadata"
+    BulkPatchOperation:
+      type: string
+      enum:
+      - REPLACE
+      - REMOVE
+    BulkPatchOperationRequestModel:
+      required:
+      - operation
+      - path
+      type: object
+      properties:
+        operation:
+          $ref: "#/components/schemas/BulkPatchOperation"
+        path:
+          type: string
+        value:
+          type: string
+    BulkPatchRequestModel:
+      required:
+      - ids
+      type: object
+      properties:
+        ids:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        patch:
+          type: array
+          items:
+            $ref: "#/components/schemas/BulkPatchOperationRequestModel"
+    CaseFilePreviewReportRequestModel:
+      required:
+      - languageCode
+      - template
+      type: object
+      properties:
+        template:
+          type: string
+        languageCode:
+          type: string
+        data:
+          $ref: "#/components/schemas/DataRequestModel"
+        additionalData:
+          type: object
+          additionalProperties: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+      description: PreviewReport Request
+    CaseFileReportRequestModel:
+      required:
+      - languageCode
+      - reportId
+      - template
+      type: object
+      properties:
+        reportId:
+          type: string
+          description: Version 4 UUID in order to identify the report in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        filename:
+          type: string
+        template:
+          type: string
+          description: Template we want to use to fill the report
+          example: default_template
+        languageCode:
+          type: string
+          description: Locale name of the language code
+          example: es_ES
+        data:
+          $ref: "#/components/schemas/DataRequestModel"
+        additionalData:
+          description: Map with key:value format with extra information of the report
+          allOf:
+          - type: object
+            additionalProperties: true
+          - {}
+        metadata:
+          description: Map with key:value format with metadata of the report
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Report Request
+    CaseFileStatus:
+      type: string
+      description: Current status of the case file
+      example: OPEN
+      enum:
+      - OPEN
+      - CLOSE
+    CaseFileStatusViewModel:
+      type: string
+      description: New status of the case file
+      example: OPEN
+      enum:
+      - OPEN
+      - CLOSE
+    CaseFileStatus_1:
+      type: string
+      description: Current status of the case file
+      example: OPEN
+      enum:
+      - OPEN
+      - CLOSE
+    CaseFileStatus_3:
+      type: string
+      description: Add this field to filter by the status of a case file
+      example: OPEN
+      enum:
+      - OPEN
+      - CLOSE
+    ChatPreviewReportRequestModel:
+      required:
+      - languageCode
+      - template
+      type: object
+      properties:
+        template:
+          type: string
+        languageCode:
+          type: string
+        fromDate:
+          type: string
+          format: date-time
+          nullable: true
+        toDate:
+          type: string
+          format: date-time
+          nullable: true
+        additionalData:
+          type: object
+          additionalProperties: true
+      description: PreviewReport Request
+    ChatSignedReportRequestModel:
+      required:
+      - languageCode
+      - reportId
+      - template
+      type: object
+      properties:
+        reportId:
+          required:
+          - "true"
+          type: string
+          description: Version 4 UUID in order to identify the report in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        filename:
+          type: string
+        template:
+          type: string
+          description: Template we want to use to fill the chat report
+          example: certificate_chat
+        languageCode:
+          type: string
+          description: Locale name of the language code
+          example: es_ES
+        fromDate:
+          type: string
+          format: date-time
+          nullable: true
+        toDate:
+          type: string
+          format: date-time
+          nullable: true
+        additionalData:
+          description: Map with key:value format with extra information of the chat
+            report
+          allOf:
+          - type: object
+            additionalProperties: true
+          - {}
+      description: Chat report request model
+    CloseEvidenceGroupRequestModel:
+      required:
+      - evidencesCount
+      type: object
+      properties:
+        evidencesCount:
+          type: integer
+          description: Number of the evidences of the group we want to close
+          format: int32
+          example: 3
+        collectMetadata:
+          description: Map with key:value format to add extra information to the group
+            before close it
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+    CreateCaseFileRequestModel:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        code:
+          type: string
+          description: Code for the case file
+          example: example code
+        description:
+          type: string
+          description: Brief description for the case file
+          example: example description
+        category:
+          type: string
+          description: Category for the case file
+          example: example category
+        owner:
+          type: string
+          description: Owner for the case file
+          example: example owner
+        title:
+          type: string
+          description: Title for the case file
+          example: example title
+        metadata:
+          description: Map with key:value format to add extra information to the case
+            file
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Create case file request
+    CreateEvidenceGroupRequestModel:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the group in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        code:
+          maxLength: 50
+          type: string
+          description: Code for the group
+          example: example code
+        type:
+          description: Type of the group
+          example: FILE
+          allOf:
+          - $ref: "#/components/schemas/GroupType"
+        name:
+          maxLength: 255
+          type: string
+          description: A name for the group
+          example: example description
+        description:
+          maxLength: 255
+          type: string
+          description: Brief description for the group
+          example: example description
+        createdBy:
+          maxLength: 50
+          type: string
+          description: Field to specify who is creating the group
+          example: example description
+        metadata:
+          description: Map with key:value format to add extra information to the group
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+    CustodyType:
+      type: string
+      description: Field that indicates if the evidence is hosted by the system or
+        not
+      example: INTERNAL
+      enum:
+      - INTERNAL
+      - EXTERNAL
+    CustodyType_1:
+      type: string
+      description: Custody type
+      example: example custody type
+      enum:
+      - INTERNAL
+      - EXTERNAL
+    DataRequestModel:
+      type: object
+      properties:
+        groups:
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupRequestModel"
+      description: Data PreviewReport Request
+    DltTimestampViewModel:
+      type: object
+      properties:
+        blockHash:
+          type: string
+          description: Hash of the DLT block where the transaction was registered
+        transactionHash:
+          type: string
+          description: DLT transaction hash
+        network:
+          type: string
+          description: DLT network used in the DLT transaction
+        blockExplorerLink:
+          type: string
+          description: URL to access details of the DLT transaction
+          format: url
+        timestampedAt:
+          type: string
+          description: Date that we obtain from the DLT provider where the evidence
+            was registered by their system
+          format: date-time
+          example: null
+    DownloadUrlModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: "#/components/schemas/ObjectType"
+        url:
+          type: string
+          format: url
+        expiration:
+          type: string
+          format: date-time
+    DownloadUrlModel_1:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Version 4 UUID to identify the object (evidence, report) in\
+            \ the system"
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        type:
+          description: Object type of the download
+          example: EVIDENCE
+          allOf:
+          - $ref: "#/components/schemas/ObjectType_1"
+        url:
+          type: string
+          description: Download url of the object we want to obtain
+          format: url
+          example: http://example.io
+        expiration:
+          type: string
+          format: date-time
+    DownloadUrlResponseModel:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Download url of the evidence we want to obtain
+          format: url
+          example: http://example.io
+        expiration:
+          type: string
+          description: The download URL expiration time
+          format: date-time
+    EvidenceGroupSearch:
+      type: object
+      properties:
+        caseFileId:
+          type: string
+          description: Add this field to filter by version 4 UUID of a case file
+          format: uuid
+          nullable: true
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        id:
+          type: array
+          description: List with version 4 UUIDs in order to search evidence groups
+            in the system
+          nullable: true
+          example: "[3fa85f64-5717-4562-b3fc-2c963f66afa6, c3a8eb1c-3f6d-4bad-9e6b-c7e29461d021]"
+          items:
+            type: string
+            format: uuid
+        code:
+          type: string
+          description: Add this field to filter by code of an evidence group
+          nullable: true
+          example: example code
+        name:
+          type: string
+          description: Add this field to filter by name of an evidence group
+          nullable: true
+          example: example name
+        status:
+          description: Add this field to filter by status of an evidence group
+          nullable: true
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/EvidenceGroupStatus"
+        type:
+          description: Add this field to filter by type of an evidence group
+          nullable: true
+          example: FILE
+          allOf:
+          - $ref: "#/components/schemas/GroupType"
+        createdBy:
+          type: string
+          description: Add this field to filter by owner of an evidence group
+          nullable: true
+          example: example owner
+        metadata:
+          description: Add this field to filter by extra information of an evidence
+            group
+          nullable: true
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        createdFrom:
+          type: string
+          description: Add this field to filter by evidence groups created from this
+            date
+          format: date-time
+          nullable: true
+          example: null
+        createdUntil:
+          type: string
+          description: Add this field to filter by evidence groups created until this
+            date
+          format: date-time
+          nullable: true
+          example: null
+        page:
+          type: integer
+          format: int32
+          nullable: true
+        size:
+          type: integer
+          format: int32
+          nullable: true
+        sort:
+          type: array
+          nullable: true
+          example:
+          - name:ASC
+          - createdAt:DESC
+          items:
+            type: string
+          enum:
+          - "name, createdAt"
+    EvidenceGroupStatus:
+      type: string
+      description: Status of the group
+      example: OPEN
+      enum:
+      - OPEN
+      - CLOSING
+      - CLOSED
+    EvidenceGroupViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the group in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        caseFileId:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        collectionMetadataId:
+          type: string
+          description: Version 4 UUID to identify if the group has collect metadata
+            in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        code:
+          type: string
+          description: Code of the group
+          example: example code
+        name:
+          type: string
+          description: Name of the group
+          example: example name
+        type:
+          type: string
+          description: Type of the group
+          example: FILE
+        status:
+          description: Status of the group
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/EvidenceGroupStatus"
+        description:
+          type: string
+          description: Brief description of the group
+          example: example description
+        createdAt:
+          type: string
+          description: Date where the group was created
+          format: date-time
+          example: null
+        createdBy:
+          type: string
+          description: Owner of the group
+          example: example owner
+        evidences:
+          description: Count of the evidences that belong to the group
+          allOf:
+          - $ref: "#/components/schemas/EvidencesCountViewModel"
+        discarded:
+          type: boolean
+          description: Boolean that indicates if the group is discarded or not
+          example: false
+        metadata:
+          description: Map with key:value format with extra information of the group
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Evidence Group response
+    EvidenceRequestModel:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the evidence in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        title:
+          type: string
+          description: Title of the evidence
+          example: example title
+        metadata:
+          description: Map with key:value format with metadata of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Evidence PreviewReport Request
+    EvidenceStatus:
+      type: string
+      enum:
+      - ERROR
+      - IN_PROCESS
+      - COMPLETED
+    EvidencesCountViewModel:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+        inProcess:
+          type: integer
+          format: int32
+        failed:
+          type: integer
+          format: int32
+        completed:
+          type: integer
+          format: int32
+      description: Count of the evidences that belong to the group
+    FileUploadedRequestModel:
+      required:
+      - computedHash
+      - evidenceId
+      - size
+      type: object
+      properties:
+        evidenceId:
+          type: string
+          format: uuid
+        size:
+          type: integer
+          format: int64
+        computedHash:
+          type: string
+    GetCaseFileViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        code:
+          type: string
+          description: Code of the case file
+          example: example code
+        description:
+          type: string
+          description: Brief description of the case file
+          example: example description
+        category:
+          type: string
+          description: Category of the case file
+          example: example category
+        owner:
+          type: string
+          description: Owner of the case file
+          example: example owner
+        status:
+          description: Current status of the case file
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/CaseFileStatus"
+          - type: string
+        metadata:
+          description: Map with key:value format with extra information of the case
+            file
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        groups:
+          type: string
+          description: List with version 4 UUID of the groups that belong to the case
+            file
+          example: example title
+        title:
+          type: string
+          description: Title of the case file
+          example: example title
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      description: Get case file response
+    GetEvidenceStatusViewModel:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the evidence
+          example: COMPLETED
+        tspTimestamp:
+          description: Map with key:value format with information about the timestamps
+            of type TSP of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        dltTimestamp:
+          description: Map with key:value format with information about the timestamps
+            of type DLT of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        file:
+          type: string
+          description: File name of the evidence
+          example: example.png
+      description: "Status of the evidence, with extra information about the timestamping\
+        \ processes of the evidence"
+    GetEvidenceTimestampsViewModel:
+      type: object
+      properties:
+        tspTimestamps:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/TspTimestampViewModel"
+        dltTimestamps:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/DltTimestampViewModel"
+      description: "Information about the timestamps of the evidence: DLT information\
+        \ + TSP information"
+    GetEvidenceViewModel:
+      type: object
+      properties:
+        caseFileId:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        groupId:
+          type: string
+          description: Version 4 UUID to identify the group in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        evidenceId:
+          type: string
+          description: Version 4 UUID to identify the evidence in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        title:
+          type: string
+          description: Title of the evidence
+          example: example title
+        custodyType:
+          type: string
+          description: Field that indicates if the evidence is hosted in the system
+            or not
+          example: INTERNAL
+        status:
+          description: "Status of the evidence, with extra information about the timestamping\
+            \ processes of the evidence"
+          allOf:
+          - $ref: "#/components/schemas/GetEvidenceStatusViewModel"
+        capturedAt:
+          type: string
+          description: Date where the evidence was captured
+          format: date-time
+          example: null
+        fileName:
+          type: string
+          description: File name of the evidence
+          example: example.png
+        fileSize:
+          type: integer
+          description: File size of the evidence
+          format: int64
+          example: 1024
+        hash:
+          type: string
+          description: Hash of the evidence
+        timestamps:
+          description: "Information about the timestamps of the evidence: DLT information\
+            \ + TSP information"
+          allOf:
+          - $ref: "#/components/schemas/GetEvidenceTimestampsViewModel"
+        createdBy:
+          type: string
+          description: Owner of the evidence
+          example: example owner
+        metadata:
+          description: Map with key:value format with extra information of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+    GroupRequestModel:
+      required:
+      - capturedFrom
+      - capturedUntil
+      - code
+      - description
+      - evidences
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the group in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        code:
+          minLength: 1
+          type: string
+          description: Code of the group
+          example: example code
+        name:
+          minLength: 1
+          type: string
+          description: Name of the group
+          example: example name
+        description:
+          type: string
+          description: Description of the group
+          example: example name
+        type:
+          minLength: 1
+          type: string
+          description: Type of the group
+          example: FILE
+        capturedFrom:
+          type: string
+          description: Filter by evidence groups created from this date
+          format: date-time
+          example: null
+        capturedUntil:
+          type: string
+          description: Filter by evidence groups created until this date
+          format: date-time
+          example: null
+        evidences:
+          minItems: 1
+          type: array
+          description: List of evidences that belongs to the group we want to show
+            in the report
+          items:
+            $ref: "#/components/schemas/EvidenceRequestModel"
+        metadata:
+          description: Map with key:value format with metadata of the group
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Group report request
+    GroupType:
+      type: string
+      description: Type of the group
+      example: FILE
+      enum:
+      - FILE
+      - PHOTO
+      - VIDEO
+      - WEB_PLUGIN
+    HashTimestampedRequestModel:
+      required:
+      - evidenceId
+      - processId
+      - provider
+      - timestampDate
+      - timestampToken
+      type: object
+      properties:
+        processId:
+          type: string
+          format: uuid
+        evidenceId:
+          minLength: 1
+          type: string
+          format: uuid
+        timestampToken:
+          minLength: 1
+          type: string
+        timestampDate:
+          minLength: 1
+          type: string
+          format: date-time
+        provider:
+          minLength: 1
+          type: string
+    HashTimestampingFailedRequestModel:
+      required:
+      - hash
+      - provider
+      type: object
+      properties:
+        hash:
+          type: string
+        provider:
+          minLength: 1
+          type: string
+    Metadata:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+        pageSize:
+          type: integer
+          format: int64
+        totalRecords:
+          type: integer
+          format: int64
+    NewUploadUrlRequestModel:
+      required:
+      - fileName
+      type: object
+      properties:
+        fileName:
+          minLength: 1
+          type: string
+          description: File name of the evidence
+          example: example.png
+    ObjectType:
+      type: string
+      enum:
+      - EVIDENCE
+      - THUMBNAIL
+      - REPORT
+      - REPORT_PACKAGE
+      - TEMPLATE
+      - TEMPORARY_FILE
+      - FONT
+      - NOTIFICATION_ATTACHMENT
+      - SIGN_FILE_ORIGINAL
+      - SIGN_FILE_SIGNED
+      - SCRIBBLE
+      - CONVERTED
+      - NOTICEMAN_EVIDENCE
+    ObjectType_1:
+      type: string
+      description: Object type of the download
+      example: EVIDENCE
+      enum:
+      - EVIDENCE
+      - REPORT
+      - REPORT_PACKAGE
+      - TEMPLATE
+    RegisterEvidenceRequestModel:
+      required:
+      - capturedAt
+      - custodyType
+      - evidenceId
+      - hash
+      - requiredTestimonyProviders
+      - testimony
+      type: object
+      properties:
+        evidenceId:
+          type: string
+          description: Version 4 UUID in order to identify the evidence in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        hash:
+          minLength: 1
+          pattern: "^([a-f0-9]{64})$"
+          type: string
+          description: SHA 256 hash of the evidence we want to register
+        createdBy:
+          maxLength: 50
+          type: string
+          description: Owner of the evidence
+          example: example owner
+        title:
+          type: string
+          description: Title of the evidence
+          example: example title
+        type:
+          type: string
+          description: Mime type of the evidence
+          example: image/jpeg
+        capturedAt:
+          type: string
+          description: Date when we evidence was captured
+          format: date-time
+          example: null
+        custodyType:
+          description: Field that indicates if the evidence is hosted by the system
+            or not
+          example: INTERNAL
+          allOf:
+          - $ref: "#/components/schemas/CustodyType"
+        fileName:
+          type: string
+          description: File name of the evidence
+          example: example.png
+        fileSize:
+          type: integer
+          description: File size of the evidence
+          example: 1
+        testimony:
+          description: Object to indicate which providers we want to use to timestamp
+            the evidence
+          allOf:
+          - properties:
+              TSP:
+                $ref: "#/components/schemas/TestimonyProviders"
+              DLT:
+                $ref: "#/components/schemas/TestimonyProviders"
+          - {}
+        requiredTestimonyProviders:
+          type: array
+          description: List of required testimony providers. Overwrites tenant configuration
+          items:
+            type: string
+        metadata:
+          description: Map with key:value format with extra information of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+    RegisterEvidenceResponseModel:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Object with the upload URL when register an INTERNAL evidence
+          format: url
+          example: http://example.io
+        expiration:
+          type: string
+          description: The upload URL expiration time
+          format: date-time
+    RelationshipItemType:
+      type: string
+      description: Field that indicates what type of relationship is assigned
+      example: CHAT_CONVERSATION
+      enum:
+      - CHAT_CONVERSATION
+    SearchCaseFileCollectionViewModel:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/BaseCollectionViewModel_SearchCaseFileViewModel_"
+      - properties:
+          records:
+            type: array
+            items:
+              $ref: "#/components/schemas/SearchCaseFileViewModel"
+    SearchCaseFileRequestModel:
+      type: object
+      properties:
+        id:
+          type: array
+          description: List with version 4 UUIDs in order to search case files in
+            the system
+          nullable: true
+          example: "[3fa85f64-5717-4562-b3fc-2c963f66afa6, c3a8eb1c-3f6d-4bad-9e6b-c7e29461d021]"
+          items:
+            type: string
+            format: uuid
+        code:
+          type: string
+          description: Add this field to filter by code of a case file
+          nullable: true
+          example: example code
+        title:
+          type: string
+          description: Add this field to filter by title of a case file
+          nullable: true
+          example: example title
+        category:
+          type: array
+          description: Add this field to filter by one/multiple categories of a case
+            file
+          nullable: true
+          example: "[cat1, cat2]"
+          items:
+            type: string
+        owner:
+          type: array
+          description: Add this field to filter by one/multiple owners of a case file
+          nullable: true
+          example: "[owner1, owner2]"
+          items:
+            type: string
+        status:
+          description: Add this field to filter by the status of a case file
+          nullable: true
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/CaseFileStatus_3"
+        createdFrom:
+          type: string
+          description: Add this field to filter by case files created from this date
+          format: date-time
+          nullable: true
+          example: null
+        createdUntil:
+          type: string
+          description: Add this field to filter by case files created until this date
+          format: date-time
+          nullable: true
+          example: null
+        metadata:
+          description: Add this field to filter by extra information of a case file
+          nullable: true
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        page:
+          type: integer
+          format: int32
+          nullable: true
+        size:
+          type: integer
+          format: int32
+          nullable: true
+        sort:
+          type: array
+          nullable: true
+          example:
+          - title:ASC
+          - createdAt:DESC
+          items:
+            type: string
+          enum:
+          - "code, title, category, owner, status, createdAt"
+      description: Search case file request
+    SearchCaseFileViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        title:
+          type: string
+          description: Title of the case file
+          example: example title
+        code:
+          type: string
+          description: Code of the case file
+          example: example code
+        category:
+          type: string
+          description: Category of the case file
+          example: example category
+        owner:
+          type: string
+          description: Owner of the case file
+          example: example owner
+        status:
+          description: Current status of the case file
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/CaseFileStatus_1"
+          - type: string
+        createdAt:
+          type: string
+          format: date-time
+        metadata:
+          description: Map with key:value format with extra information of the case
+            file
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Search case file response
+    SearchEvidenceCollectionViewModel:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/BaseCollectionViewModel_SearchEvidenceViewModel_"
+      - properties:
+          records:
+            type: array
+            items:
+              $ref: "#/components/schemas/SearchEvidenceViewModel"
+    SearchEvidenceGroupCollectionViewModel:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/BaseCollectionViewModel_SearchEvidenceGroupViewModel_"
+      - properties:
+          records:
+            type: array
+            items:
+              $ref: "#/components/schemas/SearchEvidenceGroupViewModel"
+    SearchEvidenceGroupInfoViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the group in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the group
+          example: example name
+        type:
+          description: Type of the group
+          example: FILE
+          allOf:
+          - $ref: "#/components/schemas/GroupType"
+        code:
+          type: string
+          description: Code of the group
+          example: example code
+      description: Information about the group of the evidence
+    SearchEvidenceGroupViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        groupId:
+          type: string
+          format: uuid
+        caseFileId:
+          type: string
+          format: uuid
+        collectionMetadataId:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/GroupType"
+        status:
+          $ref: "#/components/schemas/EvidenceGroupStatus"
+        createdBy:
+          type: string
+        discarded:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        evidences:
+          $ref: "#/components/schemas/EvidencesCountViewModel"
+      description: SearchEvidenceGroup response
+    SearchEvidenceRequestModel:
+      type: object
+      properties:
+        id:
+          type: array
+          description: List with version 4 UUIDs in order to search evidences in the
+            system
+          nullable: true
+          example: "[3fa85f64-5717-4562-b3fc-2c963f66afa6, c3a8eb1c-3f6d-4bad-9e6b-c7e29461d021]"
+          items:
+            type: string
+            format: uuid
+        caseFileId:
+          type: string
+          description: Add this field to filter by version 4 UUID of a case file
+          format: uuid
+          nullable: true
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        groupId:
+          type: array
+          description: Add this field to filter by a list of version 4 UUIDs of one
+            or multiple groups
+          nullable: true
+          example: "[3fa85f64-5717-4562-b3fc-2c963f66afa6, c3a8eb1c-3f6d-4bad-9e6b-c7e29461d021]"
+          items:
+            type: string
+            format: uuid
+        groupType:
+          type: array
+          description: Add this field to filter by a group type
+          nullable: true
+          example: FILE
+          items:
+            $ref: "#/components/schemas/GroupType"
+        title:
+          type: string
+          description: Add this field to filter by an evidence title
+          nullable: true
+          example: example title
+        type:
+          type: string
+          description: Add this field to filter by an evidence type
+          example: application/json
+        hash:
+          type: string
+          description: Add this field to filter by an evidence hash
+          nullable: true
+        custodyType:
+          description: Add this field to filter by custody type of the evidence
+          nullable: true
+          example: INTERNAL
+          allOf:
+          - $ref: "#/components/schemas/CustodyType"
+        testimonyMode:
+          type: array
+          description: Add this field to filter by testimony modes of the evidence
+          nullable: true
+          example: DLT
+          items:
+            $ref: "#/components/schemas/TestimonyMode"
+        status:
+          type: array
+          description: Add this field to filter by status of the evidence
+          nullable: true
+          example: COMPLETED
+          items:
+            $ref: "#/components/schemas/EvidenceStatus"
+        fileName:
+          type: string
+          description: Add this field to filter by the file name of the evidence
+          nullable: true
+          example: example.png
+        fileSize:
+          type: integer
+          description: Add this field to filter by the file size of the evidence
+          format: int64
+          nullable: true
+          example: 1024
+        metadata:
+          description: Add this field to filter by extra information of an evidence
+          nullable: true
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+        capturedFrom:
+          type: string
+          description: Add this field to filter by evidences created from this date
+          format: date-time
+          nullable: true
+          example: null
+        capturedUntil:
+          type: string
+          description: Add this field to filter by evidences created until this date
+          format: date-time
+          nullable: true
+          example: null
+        collectionMetadata:
+          type: boolean
+          description: Add this field to filter by evidences created from evidences
+            created when you close a group
+          nullable: true
+          example: true
+        page:
+          type: integer
+          format: int32
+          nullable: true
+        size:
+          type: integer
+          format: int32
+          nullable: true
+        sort:
+          type: array
+          nullable: true
+          example:
+          - groupName:ASC
+          - capturedAt:DESC
+          items:
+            type: string
+          enum:
+          - "capturedAt, groupName"
+    SearchEvidenceViewModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Version 4 UUID to identify the evidence in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        caseFileId:
+          type: string
+          description: Version 4 UUID to identify the case file in the system
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        group:
+          description: Information about the group of the evidence
+          allOf:
+          - $ref: "#/components/schemas/SearchEvidenceGroupInfoViewModel"
+        title:
+          type: string
+          description: Title of the evidence
+          example: example title
+        type:
+          type: string
+          description: Type of the evidence
+          example: application/json
+        hash:
+          type: string
+          description: Hash of the evidence
+        fileSize:
+          type: integer
+          description: File size of the evidence
+          format: int64
+          example: 1024
+        custodyType:
+          type: string
+          description: Field that indicates if the evidence is hosted by the system
+            or not
+          example: INTERNAL
+        createdBy:
+          type: string
+          description: Owner of the evidence
+          example: example owner
+        capturedAt:
+          type: string
+          description: Date when we evidence was captured
+          format: date-time
+          example: null
+        fileName:
+          type: string
+          description: File name of the evidence
+          example: example.png
+        status:
+          description: "Status of the evidence, with extra information about the timestamping\
+            \ processes of the evidence"
+          allOf:
+          - $ref: "#/components/schemas/GetEvidenceStatusViewModel"
+        timestamps:
+          description: "Information about the timestamps of the evidence: DLT information\
+            \ + TSP information"
+          allOf:
+          - $ref: "#/components/schemas/GetEvidenceTimestampsViewModel"
+        metadata:
+          description: Map with key:value format with extra information of the evidence
+          allOf:
+          - type: object
+            additionalProperties:
+              type: string
+          - {}
+      description: Search evidence response
+    SignFileRequestModel:
+      required:
+      - custodyType
+      - fileId
+      - signName
+      type: object
+      properties:
+        fileId:
+          type: string
+          description: Id of the file
+          format: uuid
+          example: null
+        signName:
+          minLength: 1
+          type: string
+          description: Name of the sign
+          example: example sign name
+        custodyType:
+          description: Custody type
+          example: example custody type
+          allOf:
+          - $ref: "#/components/schemas/CustodyType_1"
+        filename:
+          type: string
+        hash:
+          type: string
+    StartMultipartUploadRequestModel:
+      required:
+      - capturedAt
+      - createdBy
+      - testimony
+      - title
+      type: object
+      properties:
+        caseFileId:
+          type: string
+          format: uuid
+        evidenceGroupId:
+          type: string
+          format: uuid
+        createdBy:
+          type: string
+        title:
+          minLength: 1
+          type: string
+        capturedAt:
+          type: string
+          format: date-time
+        testimony:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/TestimonyDataQueryModel"
+        requiredTestimonyProviders:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    TestimonyDataQueryModel:
+      type: object
+      properties:
+        required:
+          type: boolean
+        providers:
+          type: array
+          items:
+            type: string
+    TestimonyMode:
+      type: string
+      enum:
+      - TSP
+      - DLT
+    TestimonyProviders:
+      type: object
+      properties:
+        required:
+          type: boolean
+        providers:
+          type: array
+          items:
+            type: string
+    TspTimestampViewModel:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token that we obtain from the TSP provider when we timestamp
+            a TSP evidence
+        timestampedAt:
+          type: string
+          description: Date that we obtain from the TSP provider where the evidence
+            was registered by their system
+          format: date-time
+          example: null
+    UpdateCaseFileRequestModel:
+      type: object
+      properties:
+        code:
+          type: string
+          description: New code of the case file
+          example: example code
+        description:
+          type: string
+          description: New description of the case file
+          example: example description
+        category:
+          type: string
+          description: New category of the case file
+          example: example category
+        owner:
+          type: string
+          description: New owner of the case file
+          example: example owner
+        title:
+          type: string
+          description: New title of the case file
+          example: example title
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    UpdateCaseFileStatusRequestModel:
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          description: New status of the case file
+          example: OPEN
+          allOf:
+          - $ref: "#/components/schemas/CaseFileStatusViewModel"
+          - type: string
+    UpdateCaseFilesRequestModel:
+      $ref: "#/components/schemas/BulkPatchRequestModel"
+    UpdateEvidenceGroupRequest:
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          type: string
+          description: New name of the group
+          example: example name
+        description:
+          maxLength: 255
+          type: string
+          description: New description of the group
+          example: example description
+        code:
+          maxLength: 50
+          type: string
+          description: New code of the group
+          example: example code
+        createdBy:
+          maxLength: 50
+          type: string
+          description: New owner of the group
+          example: example owner
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    UpdateEvidenceGroupsRequest:
+      $ref: "#/components/schemas/BulkPatchRequestModel"
+    UpdateEvidenceRequestModel:
+      type: object
+      properties:
+        title:
+          type: string
+          description: New title of the evidence
+          example: example title
+        createdBy:
+          maxLength: 50
+          type: string
+          description: New owner of the evidence
+          example: example owner
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        custody:
+          $ref: "#/components/schemas/CustodyType"
+    UpdateEvidencesRequestModel:
+      $ref: "#/components/schemas/BulkPatchRequestModel"
+    UploadLinkOutputModel:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+        expiration:
+          type: string
+          format: date-time
+    UploadUrlTemporaryFileHttpRequestModel:
+      required:
+      - capturedAt
+      - createdBy
+      - evidenceId
+      - fileName
+      - testimony
+      - title
+      type: object
+      properties:
+        caseFileId:
+          type: string
+          format: uuid
+        evidenceGroupId:
+          type: string
+          format: uuid
+        evidenceId:
+          type: string
+          format: uuid
+        createdBy:
+          type: string
+        title:
+          type: string
+        capturedAt:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+        testimony:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/TestimonyDataQueryModel"
+        requiredTestimonyProviders:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string

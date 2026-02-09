@@ -1,0 +1,4 @@
+interface:
+  display_name: "Digital Trust (GCloudFactory)"
+  short_description: "API Digital Trust: auth, case-files, evidencias y firmas"
+  default_prompt: "Usa la API Digital Trust de GCloudFactory: elige entorno (INT/PRE), autentica con client_credentials, trabaja con case-files/evidence y signature requests; sigue headers y códigos estándar."

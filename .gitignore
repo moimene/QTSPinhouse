@@ -1,0 +1,13 @@
+# Node
+node_modules
+npm-debug.log*
+yarn-error.log
+dist
+.env
+
+# Python
+__pycache__
+*.pyc
+
+# Mac
+.DS_Store

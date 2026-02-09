@@ -1,0 +1,23 @@
+{
+  "name": "mcp-digital-trust",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "generate:openapi": "openapi-zod-client ../../digital-trust-gcloudfactory/assets/digital-trust-api-1.0.yml -o src/gen/client.ts --export-schemas"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^6.7.0",
+    "openapi-zod-client": "^1.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.0"
+  }
+}
