@@ -11,6 +11,19 @@ Integración lista para usar con la API Digital Trust / Legal App Factory: inclu
 - **Webhooks**: notificaciones cuando se suben ficheros o se completa el sellado de hash.
 - **Entornos**: INT (sandbox) y PRE (preproducción). Base-paths y login URL cambian por entorno.
 
+## Problema que resuelve
+Muchas organizaciones necesitan recopilar y custodiar evidencias digitales (documentos, fotos, videos, capturas web), generar reportes y firmarlos para trámites legales o de compliance. Hacerlo a mano implica riesgo de errores (subidas sin trazabilidad, formatos inconsistentes, tokens caducados, rutas mal formadas).  
+Este repo entrega:
+- Un **Skill** que guía a un agente/LLM sobre cómo autenticar, elegir entorno y llamar a los endpoints correctos.
+- Un **MCP server** que expone herramientas tipadas y validadas (Zod + OpenAPI) para automatizar llamadas sin redescubrir la API en cada proyecto.
+
+### Casos de uso concretos donde integrar el MCP
+- **Onboarding de clientes con documentación legal**: crear un expediente, subir documentos firmados, generar reporte PDF y devolverlo al CRM.
+- **Investigaciones internas / auditoría**: agrupar evidencias (capturas, logs, videos), generar paquete ZIP y compartir vía download-url segura.
+- **Flujos de firma**: subir un archivo, iniciar `sign-file` y entregar al usuario la URL del documento firmado.
+- **Automatizaciones de backoffice**: disparar webhooks en cargas masivas y verificar integridad con `verifyHmac` antes de procesar.
+- **Bots/Agentes que asisten a analistas**: el agente usa las tools MCP en tiempo real para crear/consultar expedientes sin que el analista recuerde la API.
+
 ## Qué es esto
 - **Skill `digital-trust-gcloudfactory`**: guía de uso, referencias de auth/endpoints y OpenAPI para que agentes trabajen con case files, evidencias, reportes y firma de archivos.
 - **MCP server `digital-trust`**: expone herramientas sobre stdio para consumir la API (login, case-files, evidences, reports, sign-file, webhooks).
