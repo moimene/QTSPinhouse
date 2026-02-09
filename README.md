@@ -11,6 +11,11 @@ Integración lista para usar con la API Digital Trust / Legal App Factory: inclu
 - **Webhooks**: notificaciones cuando se suben ficheros o se completa el sellado de hash.
 - **Entornos**: INT (sandbox) y PRE (preproducción). Base-paths y login URL cambian por entorno.
 
+## Integración con servicios cualificados eIDAS
+- Digital Trust se integra con servicios de confianza cualificados (QTSP) regulados por eIDAS, lo que significa que certificados, sellos y time-stamps emitidos por un QTSP tienen **reconocimiento legal automático en todos los Estados miembros** (principio de mercado interior, art. 4 eIDAS).
+- La API expone rutas para evidencias, reportes y firma que pueden encadenarse con servicios QTSP (p. ej., sellado de tiempo cualificado, QES) para reforzar la validez probatoria.
+- Los QTSP figuran en las **Trusted Lists** nacionales/publicadas por la Comisión; al usar un QTSP listado, el valor probatorio se ve reforzado y es interoperable en la UE.
+
 ## Problema que resuelve
 Muchas organizaciones necesitan recopilar y custodiar evidencias digitales (documentos, fotos, videos, capturas web), generar reportes y firmarlos para trámites legales o de compliance. Hacerlo a mano implica riesgo de errores (subidas sin trazabilidad, formatos inconsistentes, tokens caducados, rutas mal formadas).  
 Este repo entrega:
