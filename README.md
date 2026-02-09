@@ -4,6 +4,13 @@
 
 Integración lista para usar con la API Digital Trust / Legal App Factory: incluye un Skill para agentes y un servidor MCP en Node/TypeScript con validación automática a partir del OpenAPI oficial.
 
+## ¿Qué es Digital Trust / Legal App Factory?
+- **Evidence Manager**: gestiona expedientes (`case-files`), grupos de evidencia y evidencias; permite subir/descargar ficheros, generar thumbnails y sellar la cadena de custodia.
+- **Reportes**: genera PDF/ZIP con la evidencia consolidada; soporta previsualizaciones.
+- **Signature Manager**: flujo de firma de archivos (`sign-file`) con URL de descarga del documento firmado.
+- **Webhooks**: notificaciones cuando se suben ficheros o se completa el sellado de hash.
+- **Entornos**: INT (sandbox) y PRE (preproducción). Base-paths y login URL cambian por entorno.
+
 ## Qué es esto
 - **Skill `digital-trust-gcloudfactory`**: guía de uso, referencias de auth/endpoints y OpenAPI para que agentes trabajen con case files, evidencias, reportes y firma de archivos.
 - **MCP server `digital-trust`**: expone herramientas sobre stdio para consumir la API (login, case-files, evidences, reports, sign-file, webhooks).
@@ -21,6 +28,17 @@ Integración lista para usar con la API Digital Trust / Legal App Factory: inclu
 ./digital-trust-gcloudfactory/   # Skill (SKILL.md, referencias, OpenAPI, script de token)
 ./digital-trust/                 # MCP server (Node/TS, Zod generado desde OpenAPI)
 ```
+
+## Flujos habituales (alto nivel)
+1) **Autenticarse**: obtener `access_token` con client_credentials (herramienta MCP `login` o script `get_token.py`).
+2) **Crear expediente**: `caseFiles.create` → obtén `caseFileId`.
+3) **Agregar evidencia**:
+   - Crear grupo: `evidence-group` (incluido en case file).
+   - Registrar evidencia: `evidences.create`.
+   - Subir archivo: pedir `evidences.uploadUrl` (URL prefirmada) y subir el binario al storage que devuelve.
+4) **Generar reporte**: `reports.createForCase`, luego descargar PDF/ZIP con `reports.document` o `reports.package`.
+5) **Firmar archivo**: `signFile.create` y obtener `signFile.downloadUrl`.
+6) **Escuchar eventos**: implementar webhooks `doc-manager/file-uploaded` y `testifier/hash-timestamped`.
 
 ## MCP: instalación y uso rápido
 Requisitos: Node 22+, npm.
@@ -44,18 +62,21 @@ SCOPE=token
 TIMEOUT_MS=10000
 ```
 
-### Herramientas MCP disponibles
-- `login`
-- `caseFiles.list | create | get`
-- `evidences.create | uploadUrl | downloadUrl | uploadUrlById | downloadUrlById`
-- `signFile.create | signFile.downloadUrl`
-- `reports.createForCase | reports.document | reports.package | reports.delete | reports.case.document | reports.case.package`
-- `webhooks.verifyHmac` (prefijo opcional, sha256/sha1)
+### Herramientas MCP disponibles (mapeo a funcionalidades)
+- Autenticación: `login`
+- Expedientes: `caseFiles.list | create | get`
+- Evidencias: `evidences.create | uploadUrl | downloadUrl | uploadUrlById | downloadUrlById`
+- Firma: `signFile.create | signFile.downloadUrl`
+- Reportes: `reports.createForCase | reports.document | reports.package | reports.delete | reports.case.document | reports.case.package`
+- Webhooks utilitarios: `webhooks.verifyHmac` (prefijo opcional, sha256/sha1)
 
-Las descargas PDF/ZIP se devuelven como JSON `{ contentType, base64 }` para que el cliente MCP las decodifique.
+Notas:
+- `login`
+- Las descargas PDF/ZIP se devuelven como JSON `{ contentType, base64 }` para que el cliente MCP las decodifique.
+- Las peticiones se validan con Zod generado desde el OpenAPI para reducir errores de contrato.
 
 ### Ejemplo de integración (payload MCP)
-Subir evidencia (solicitar URL de subida):
+Subir evidencia (solicitar URL de subida y luego usar la URL prefirmada):
 ```json
 {
   "name": "evidences.uploadUrl",
