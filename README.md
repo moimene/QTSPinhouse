@@ -1,6 +1,6 @@
 # Digital Trust MCP + Skill (GCloudFactory)
 
-![GitHub release](https://img.shields.io/github/v/release/moimene/QTSPinhouse?label=release) ![License](https://img.shields.io/github/license/moimene/QTSPinhouse) ![Node](https://img.shields.io/badge/node-%E2%89%A522.x-brightgreen) ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-blue)
+![GitHub release](https://img.shields.io/github/v/release/moimene/QTSPinhouse?label=release) ![License](https://img.shields.io/github/license/moimene/QTSPinhouse) ![Node](https://img.shields.io/badge/node-%E2%89%A522.x-brightgreen) ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-blue) ![MCP](https://img.shields.io/badge/MCP-ready-purple)
 
 Integración lista para usar con la API Digital Trust / Legal App Factory: incluye un Skill para agentes y un servidor MCP en Node/TypeScript con validación automática a partir del OpenAPI oficial.
 
